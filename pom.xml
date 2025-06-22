@@ -6,7 +6,7 @@
 
     <groupId>dev.bermeb</groupId>
     <artifactId>RPGChat</artifactId>
-    <version>2.3.0b</version>
+    <version>2.3.0</version>
 
     <properties>
         <!-- Java Configuration -->
