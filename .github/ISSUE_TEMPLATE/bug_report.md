@@ -7,7 +7,7 @@ assignees: bermeb
 
 ---
 
-## Bug Description
+## Bug Description (Expected Behavior vs. Actual Behavior)
 **A clear and concise description of what the bug is.**
 <!-- Example: The application crashes when trying to save a file with special characters in the filename -->
 
@@ -23,14 +23,6 @@ assignees: bermeb
 - [ ] Sometimes reproducible
 - [ ] Rarely reproducible
 - [ ] Unable to reproduce
-
-## Expected Behavior
-**A clear and concise description of what you expected to happen.**
-<!-- Example: The file should save successfully without any errors -->
-
-## Actual Behavior
-**What actually happened instead.**
-<!-- Example: The application shows an error dialog and fails to save the file -->
 
 ## Screenshots & Logs
 **If applicable, add screenshots or logs to help explain your problem.**
@@ -49,13 +41,13 @@ Paste error messages or relevant logs here
 
 ### Server/Runtime Details *(if applicable)*
 - **Server Version:** [e.g. 1.19.2]
-- **Platform/Runtime:** [e.g. Spigot, Paper, Node.js 18.x, Python 3.11]
+- **Platform/Runtime:** [e.g. Spigot, Paper]
 - **Related Plugins/Extensions:** [List any relevant plugins, extensions, or dependencies]
 
 ### Configuration *(if applicable)*
 - **Custom Configuration:** [Yes/No - if yes, mention what was modified]
 
-## Additional Context
+## Additional Context *(if applicable)*
 **Add any other context about the problem here.**
 - When did this issue first appear?
 - Does this happen in a clean/fresh installation?
