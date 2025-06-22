@@ -11,13 +11,6 @@ A Minecraft Spigot plugin that displays chat messages as floating text above pla
 - **Sound Effects**: Customizable sounds for different message types
 - **Multi-Version Support**: Compatible with Minecraft 1.19.2 - 1.21.5
 
-## Installation
-
-1. Download the appropriate JAR for your server version from releases
-2. Place in your `plugins/` folder
-3. Restart your server
-4. Configure `plugins/RPGChat/config.yml` as needed
-
 ## Building
 
 ### Prerequisites
@@ -36,29 +29,6 @@ mvn clean package -P v1_21_R4
 
 # Available profiles: v1_19_R1, v1_19_R2, v1_19_R3, v1_20_R1, v1_20_R2, v1_20_R3, v1_20_R4, v1_21_R1, v1_21_R2, v1_21_R3, v1_21_R4
 ```
-
-## Configuration
-
-Basic configuration options in `config.yml`:
-
-- **Message Display**: Text color, duration, height above player
-- **Whisper Settings**: Range, color, activation symbol (`#`)
-- **Sound Effects**: Custom sounds for normal and whispered messages
-- **Word Filter**: Blacklist with custom replacement character
-- **Channels**: Multi-channel support with format `name|range|prefix`
-
-## Commands
-
-- `/rpgchat reload` - Reload configuration
-- `/rpgchat fix` - Remove hanging text entities
-- `/rpgchat channel <name>` - Switch to specified channel
-
-## Permissions
-
-- `RPGChat.Reload` - Access to reload command
-- `RPGChat.Fix` - Access to fix command
-- `RPGChat.Bypass` - Bypass cooldowns and anti-repeat
-- `RPGChat.Prefix.*` - Custom prefix permissions
 
 ## Dependencies
 
