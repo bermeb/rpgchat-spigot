@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Create a bug report to help maintaining the plugin
-title: "[BUG]"
+title: "[BUG] "
 labels: bug
 assignees: bermeb
 
