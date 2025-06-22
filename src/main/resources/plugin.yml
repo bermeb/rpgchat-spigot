@@ -1,7 +1,7 @@
 name: RPGChat
-version: 2.3.0b
-api-version: 1.13
-author: bermeb
+version: ${project.version}
+api-version: ${api.version}
+author: ${plugin.author}
 main: dev.bermeb.rpgchat.RPGChat
 softdepend: [PlaceholderAPI, ChatControl]
 commands:
