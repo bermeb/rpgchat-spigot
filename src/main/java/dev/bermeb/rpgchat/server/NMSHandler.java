@@ -81,6 +81,7 @@ public class NMSHandler {
             case "1.21.3-R0.1-SNAPSHOT" -> "v1_21_R2";
             case "1.21.4-R0.1-SNAPSHOT" -> "v1_21_R3";
             case "1.21.5-R0.1-SNAPSHOT" -> "v1_21_R4";
+            case "1.21.6-R0.1-SNAPSHOT" -> "v1_21_R5";
             default -> "unidentified Bukkit version: " + bukkitVersion;
         };
     }

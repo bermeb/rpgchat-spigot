@@ -22,9 +22,9 @@
         <specialsource-maven-plugin.version>2.0.4</specialsource-maven-plugin.version>
         
         <!-- Default Spigot Configuration (overridden by profiles) -->
-        <spigot.version>1.21.5-R0.1-SNAPSHOT</spigot.version>
-        <spigot.display.version>1.21.5</spigot.display.version>
-        <nms.version>v1_21_R4</nms.version>
+        <spigot.version>1.21.6-R0.1-SNAPSHOT</spigot.version>
+        <spigot.display.version>1.21.6</spigot.display.version>
+        <nms.version>v1_21_R5</nms.version>
         <api.version>1.21</api.version>
         <plugin.author>bermeb</plugin.author>
         
@@ -205,6 +205,20 @@
                                     </arguments>
                                 </configuration>
                             </execution>
+                            <execution>
+                                <id>build-v1_21_R5</id>
+                                <phase>package</phase>
+                                <goals><goal>exec</goal></goals>
+                                <configuration>
+                                    <executable>mvn</executable>
+                                    <arguments>
+                                        <argument>package</argument>
+                                        <argument>-P</argument>
+                                        <argument>v1_21_R5</argument>
+                                        <argument>-q</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
                         </executions>
                     </plugin>
                 </plugins>
@@ -349,6 +363,18 @@
                 <spigot.version>1.21.5-R0.1-SNAPSHOT</spigot.version>
                 <spigot.display.version>1.21.5</spigot.display.version>
                 <nms.version>v1_21_R4</nms.version>
+                <api.version>1.21</api.version>
+            </properties>
+            <build>
+                <finalName>${project.artifactId}-${spigot.display.version}-SNAPSHOT</finalName>
+            </build>
+        </profile>
+        <profile>
+            <id>v1_21_R5</id>
+            <properties>
+                <spigot.version>1.21.6-R0.1-SNAPSHOT</spigot.version>
+                <spigot.display.version>1.21.6</spigot.display.version>
+                <nms.version>v1_21_R5</nms.version>
                 <api.version>1.21</api.version>
             </properties>
             <build>

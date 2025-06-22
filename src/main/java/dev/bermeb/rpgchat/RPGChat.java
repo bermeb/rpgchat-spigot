@@ -24,8 +24,9 @@ public class RPGChat extends JavaPlugin {
     public void onEnable() {
         loadConfig();
         this.logger = this.getLogger();
-        this.chatUtils = new ChatUtils();
         this.chatOptions = new ChatOptions();
+
+        this.chatUtils = new ChatUtils();
 
         // Only needed for channel management via PersistentDataContainers
         if(this.getConfig().getBoolean(("Options.Chat.ChannelBeta"))) {
@@ -92,6 +93,13 @@ public class RPGChat extends JavaPlugin {
         logException(version, exception);
     }
 
+    /**
+     * Logs an exception with a message indicating that the version may not be supported
+     * and disables the plugin with formatting.
+     *
+     * @param version The version of the plugin or Minecraft that may not be supported.
+     * @param e The exception to log.
+     */
     private void logException(String version, Exception e) {
         logger.log(Level.SEVERE, "----------------------------------------------------------");
         logger.log(Level.SEVERE, "Version '" + version + "' may not be supported at this time!");
