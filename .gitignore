@@ -1,0 +1,65 @@
+# ------------------------
+# Build artifacts
+# ------------------------
+target/
+output/
+!/mvn/wrapper/maven-wrapper.jar
+dependency-reduced-pom.xml
+
+# ------------------------
+# IntelliJ IDEA
+# ------------------------
+.idea/
+.settings/
+*.iws
+*.iml
+*.ipr
+
+# IntelliJ project files (falls einzelne behalten werden sollen)
+# workspace.xml – enthält Maschinen-spezifische Einstellungen
+/shelf/
+/workspace.xml
+
+# ------------------------
+# VS Code
+# ------------------------
+.vscode/
+
+# ------------------------
+# ANTLR generated sources (optional – falls separat generiert)
+/generated/
+*.tokens
+*.interp
+
+# ------------------------
+# PlantUML cache & Export-Dateien
+# ------------------------
+*.puml~*
+*.svg
+*.png
+*.eps
+*.umlclass
+
+# ------------------------
+# Logs
+# ------------------------
+*.log
+*.txt
+
+# ------------------------
+# OS / System files
+# ------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ------------------------
+# HTTP-Tooling
+# ------------------------
+/httpRequests/
+
+# ------------------------
+# Database / Data sources (IDE intern)
+/dataSources/
+/dataSources.local.xml

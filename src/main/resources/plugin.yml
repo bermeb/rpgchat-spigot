@@ -1,0 +1,9 @@
+name: RPGChat
+version: 2.3.0b
+api-version: 1.13
+author: bermeb
+main: dev.bermeb.rpgchat.RPGChat
+softdepend: [PlaceholderAPI, ChatControl]
+commands:
+  rpgchat:
+    description: Command for managing RPGChat

@@ -1,0 +1,47 @@
+package dev.bermeb.rpgchat.nms.v1_21_R1;
+
+import dev.bermeb.rpgchat.RPGChat;
+import dev.bermeb.rpgchat.server.IEntityRegister;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.List;
+
+public class EntityRegister implements IEntityRegister {
+
+    private static CustomEntityRegistry ENTITY_REGISTRY;
+    private static final RPGChat PLUGIN = JavaPlugin.getPlugin(RPGChat.class);
+
+    public void registerEntityClass(Class<?> clazz) {
+        if (ENTITY_REGISTRY == null)
+            return;
+        Class<?> search = clazz;
+        while ((search = search.getSuperclass()) != null && Entity.class.isAssignableFrom(search)) {
+            EntityType<?> type = ENTITY_REGISTRY.findType(search);
+            ResourceLocation key = ENTITY_REGISTRY.getKey(type);
+            if (type == null)
+                continue;
+            int code = ENTITY_REGISTRY.getId(type);
+            ENTITY_REGISTRY.put(code, key, type);
+            return;
+        }
+        throw new IllegalArgumentException("unable to find valid entity superclass for class " + clazz);
+    }
+
+    @Override
+    public boolean registerEntity() {
+        try {
+            registerEntityClass(WharStand.class);
+            return true;
+        } catch (Exception exception) {
+            PLUGIN.logSevereError(
+                    List.of("Could not register WharStand-entity.",
+                            "Please report this error to the developer!"),
+                    exception,
+                    PLUGIN.getServer().getClass().getPackage().getName());
+        }
+        return false;
+    }
+}
