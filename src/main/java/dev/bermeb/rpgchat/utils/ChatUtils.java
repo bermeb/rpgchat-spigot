@@ -22,7 +22,7 @@ public class ChatUtils implements Listener {
 
     private static final RPGChat PLUGIN = JavaPlugin.getPlugin(RPGChat.class);
     
-    private final ChatConfig config;
+    private ChatConfig config;
 
     private final ChannelManager channelManager;
     private final ChatQueueManager queueManager;
@@ -130,6 +130,14 @@ public class ChatUtils implements Listener {
         normalDisplay.cleanup();
         whisperedDisplay.cleanup();
         channelDisplay.cleanup();
+    }
+
+    public void reloadConfig() {
+        this.config = ConfigurationLoader.loadFromChatOptions(PLUGIN.getChatOptions());
+        channelManager.loadChannels(config.channels());
+        normalDisplay.reloadConfig(config);
+        whisperedDisplay.reloadConfig(config);
+        channelDisplay.reloadConfig(config);
     }
 
     public ChatQueueManager getQueueManager() {

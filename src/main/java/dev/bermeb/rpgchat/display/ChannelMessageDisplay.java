@@ -22,8 +22,9 @@ public class ChannelMessageDisplay implements MessageDisplayStrategy {
     private static final long TICKS_PER_SECOND = 20L;
     private static final int SHOW_TIME_OFFSET = 10;
     private static final int MESSAGE_COMPLETE_OFFSET = 1;
-    
-    private final ChatConfig config;
+
+    private ChatConfig config;
+
     private final SoundManager soundManager;
     private final NMSHandler nmsHandler;
     private final ChannelManager channelManager;
@@ -123,16 +124,15 @@ public class ChannelMessageDisplay implements MessageDisplayStrategy {
         wharStands.remove(wharStand);
         wharStand.destroyEntity();
     }
-    
+
+    @Override
+    public void reloadConfig(ChatConfig newConfig) {
+        this.config = newConfig;
+    }
+
     @Override
     public void cleanup() {
-        wharStands.forEach(stand -> {
-            try {
-                stand.destroyEntity();
-            } catch (Exception e) {
-                PLUGIN.getLogger().warning("Error destroying WharStand: " + e.getMessage());
-            }
-        });
+        wharStands.forEach(IWharStand::destroyEntity);
         wharStands.clear();
     }
 }

@@ -58,9 +58,7 @@ public class RPGChatCommands implements CommandExecutor {
             sender.sendMessage("No Permissions!");
             return false;
         }
-        PLUGIN.reloadConfig();
-        PLUGIN.saveConfig();
-        PLUGIN.getChatOptions().reloadOptions();
+        PLUGIN.reloadPluginConfiguration();
         sender.sendMessage("Reloaded RPGChat-Config");
         return true;
     }

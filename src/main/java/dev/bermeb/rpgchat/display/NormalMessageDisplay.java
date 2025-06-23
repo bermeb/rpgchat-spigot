@@ -21,7 +21,8 @@ public class NormalMessageDisplay implements MessageDisplayStrategy {
     private static final long TICKS_PER_SECOND = 20L;
     private static final int SHOW_TIME_OFFSET = 10;
     
-    private final ChatConfig config;
+    private ChatConfig config;
+
     private final SoundManager soundManager;
     private final List<ArmorStand> armorStands = new ArrayList<>();
     private final ConcurrentHashMap<Player, Integer> displayProgress = new ConcurrentHashMap<>();
@@ -102,6 +103,11 @@ public class NormalMessageDisplay implements MessageDisplayStrategy {
     
     private int getMinShowTime(String message) {
         return (int) Math.ceil(message.length() / (double) TICKS_PER_SECOND) + config.duration();
+    }
+
+    @Override
+    public void reloadConfig(ChatConfig newConfig) {
+        this.config = newConfig;
     }
     
     @Override
