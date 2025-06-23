@@ -9,7 +9,7 @@ A Minecraft Spigot plugin that displays chat messages as floating text above pla
 - **Multi-Channel Support**: Different chat channels with custom ranges and colors
 - **Word Filtering**: Configurable profanity filter with custom blacklists
 - **Sound Effects**: Customizable sounds for different message types
-- **Multi-Version Support**: Compatible with Minecraft 1.19.2 - 1.21.5
+- **Multi-Version Support**: Compatible with Minecraft 1.19.2 - 1.21.6
 
 ## Building
 
@@ -25,9 +25,9 @@ A Minecraft Spigot plugin that displays chat messages as floating text above pla
 mvn clean package
 
 # Build specific version
-mvn clean package -P v1_21_R4
+mvn clean package -P v1_21_R5
 
-# Available profiles: v1_19_R1, v1_19_R2, v1_19_R3, v1_20_R1, v1_20_R2, v1_20_R3, v1_20_R4, v1_21_R1, v1_21_R2, v1_21_R3, v1_21_R4
+# Available profiles: v1_19_R1, v1_19_R2, v1_19_R3, v1_20_R1, v1_20_R2, v1_20_R3, v1_20_R4, v1_21_R1, v1_21_R2, v1_21_R3, v1_21_R4, v1_21_R5
 ```
 
 ## Dependencies
