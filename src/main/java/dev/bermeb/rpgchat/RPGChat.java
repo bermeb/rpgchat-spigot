@@ -109,6 +109,13 @@ public class RPGChat extends JavaPlugin {
         Bukkit.getPluginManager().disablePlugin(this);
     }
 
+    public void reloadPluginConfiguration() {
+        reloadConfig();
+        saveConfig();
+        chatOptions.reloadOptions();
+        chatUtils.reloadConfig();
+    }
+
     public ChatOptions getChatOptions() { return chatOptions; }
 
     // Needed for channel management via PersistentDataContainers
