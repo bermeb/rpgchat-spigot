@@ -50,7 +50,7 @@ public class PlayerChat implements Listener {
         if (!isWhitelistedWorld(event.getPlayer().getWorld().getName()))
             return;
 
-        boolean whispered = isWhisperedMessage(config.whispered().symbol());
+        boolean whispered = isWhisperedMessage(message);
         boolean normal = isNormalMessage(message);
 
         // Since you can define a symbol for normal chat, we need to check if the message starts with it,

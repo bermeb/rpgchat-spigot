@@ -37,8 +37,11 @@ public class NormalMessageDisplay implements MessageDisplayStrategy {
         displayProgress.put(player, 0);
         
         new BukkitRunnable() {
+            private final StringBuilder currentName = new StringBuilder();
+
             @Override
             public void run() {
+
                 armorStand.teleport(player.getEyeLocation().add(0, config.height(), 0));
                 
                 Integer currentIndex = displayProgress.get(player);
@@ -46,8 +49,8 @@ public class NormalMessageDisplay implements MessageDisplayStrategy {
                     int i = currentIndex;
                     
                     if (i < message.length()) {
-                        String currentName = armorStand.getCustomName();
-                        armorStand.setCustomName((currentName != null ? currentName : "") + message.charAt(i));
+                        currentName.append(message.charAt(i));
+                        updateArmorStandName(armorStand, currentName.toString());
                     }
                     
                     i++;
@@ -70,17 +73,31 @@ public class NormalMessageDisplay implements MessageDisplayStrategy {
     private ArmorStand createArmorStand(Player player) {
         ArmorStand armorStand = player.getWorld()
                 .spawn(player.getEyeLocation().add(0, config.height(), 0), ArmorStand.class);
-        
+
         armorStand.setAI(false);
-        armorStand.setVisible(false);
-        armorStand.setGravity(false);
-        armorStand.setCollidable(false);
         armorStand.setMarker(true);
-        armorStand.setCustomName(ChatColor.translateAlternateColorCodes('&', config.normal().color()));
+        armorStand.setBasePlate(false);
+        armorStand.setArms(false);
+        armorStand.setVisible(false);
+        armorStand.setCollidable(false);
+        armorStand.setGravity(false);
+        armorStand.setCanPickupItems(false);
         armorStand.setCustomNameVisible(true);
-        
+
+        String initialName = ChatColor.translateAlternateColorCodes('&', config.normal().color());
+
+        armorStand.setCustomName(initialName);
+
         armorStands.add(armorStand);
         return armorStand;
+    }
+
+    private void updateArmorStandName(ArmorStand armorStand, String newText) {
+        String colorCode = config.normal().color();
+        String fullName = colorCode + newText;
+        String processedName = ChatColor.translateAlternateColorCodes('&', fullName);
+
+        armorStand.setCustomName(processedName);
     }
     
     private int getMinShowTime(String message) {
