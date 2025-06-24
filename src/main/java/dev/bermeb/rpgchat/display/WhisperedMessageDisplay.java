@@ -5,7 +5,6 @@ import dev.bermeb.rpgchat.config.ChatConfig;
 import dev.bermeb.rpgchat.server.IWharStand;
 import dev.bermeb.rpgchat.server.NMSHandler;
 import dev.bermeb.rpgchat.sound.SoundManager;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -57,6 +56,7 @@ public class WhisperedMessageDisplay implements MessageDisplayStrategy {
                     }
 
                     wharStand.reloadEntity(); // Needs to be reloaded to update the name and location with new packets
+
                     i++;
                     
                     if (i == (getMinShowTime(message) * TICKS_PER_SECOND + SHOW_TIME_OFFSET)) {
@@ -82,7 +82,8 @@ public class WhisperedMessageDisplay implements MessageDisplayStrategy {
         
         String customName = config.customPrefixes() ? 
             getPrefix(player) : config.whispered().color();
-        wharStand.setName(ChatColor.translateAlternateColorCodes('&', customName));
+
+        wharStand.setName(customName);
         
         wharStands.add(wharStand);
         return wharStand;

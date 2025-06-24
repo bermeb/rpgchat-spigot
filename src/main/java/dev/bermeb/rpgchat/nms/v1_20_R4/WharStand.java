@@ -17,21 +17,23 @@ import org.bukkit.craftbukkit.v1_20_R4.util.CraftChatMessage;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Objects;
 
 public class WharStand extends ArmorStand implements IWharStand {
 
     private final List<Player> players;
 
-    public WharStand(Location loc, List<Player> players) { this(loc, ((CraftWorld)loc.getWorld()).getHandle(), players); }
+    public WharStand(Location loc, List<Player> players) { this(loc, ((CraftWorld) Objects.requireNonNull(loc.getWorld())).getHandle(), players); }
 
     public WharStand(Location loc, Level notchWorld, List<Player> players) {
         super(EntityType.ARMOR_STAND, notchWorld);
 
         setPos(loc.getX(), loc.getY(), loc.getZ());
         doModifiers();
+        this.players = players;
+
         sendPacket(players, this.getAddEntityPacket());
         sendPacket(players, new ClientboundSetEntityDataPacket(this.getId(), this.getEntityData().getNonDefaultValues()));
-        this.players = players;
     }
 
     @Override
@@ -44,26 +46,33 @@ public class WharStand extends ArmorStand implements IWharStand {
         this.collides = false;
     }
 
+    @Override
     public void teleport(Location loc) {
         this.getBukkitEntity().teleport(loc);
     }
 
     @Override
     public void setName(String name) {
-        this.setCustomName(CraftChatMessage.fromString(ChatColor.translateAlternateColorCodes('&', name), false)[0]);
+        final String formattedName = ChatColor.translateAlternateColorCodes('&', name);
+        this.setCustomName(CraftChatMessage.fromStringOrNull(formattedName));
     }
 
     @Override
     public void appendToCustomName(String append) {
-        this.setCustomName(CraftChatMessage.fromString(CraftChatMessage.fromComponent(getCustomName())
-                + ChatColor.translateAlternateColorCodes('&', append), false)[0]);
-        //this.setCustomName(Component.empty().append(getCustomName()).append(append));
+        String formattedAppend = ChatColor.translateAlternateColorCodes('&', append);
+
+        String currentText = this.getCustomName() != null ?
+                CraftChatMessage.fromComponent(this.getCustomName()) : "";
+
+        String newText = currentText + formattedAppend;
+
+        this.setCustomName(CraftChatMessage.fromStringOrNull(newText));
     }
 
     @Override
     public void destroyEntity() {
         sendPacket(players, new ClientboundRemoveEntitiesPacket(this.getId()));
-        this.getBukkitEntity().remove();
+        this.discard();
     }
 
     @Override
@@ -72,7 +81,7 @@ public class WharStand extends ArmorStand implements IWharStand {
         sendPacket(players, new ClientboundSetEntityDataPacket(this.getId(), this.getEntityData().getNonDefaultValues()));
     }
 
-    public void sendPacket(List<Player> players, Packet<? extends PacketListener> packet) {
+    private void sendPacket(List<Player> players, Packet<? extends PacketListener> packet) {
         for (Player p : players)
             ((CraftPlayer) p).getHandle().connection.send(packet);
     }
