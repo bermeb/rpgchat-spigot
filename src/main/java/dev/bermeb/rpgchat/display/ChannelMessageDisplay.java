@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChannelMessageDisplay implements MessageDisplayStrategy {
-    
+
     private static final RPGChat PLUGIN = JavaPlugin.getPlugin(RPGChat.class);
     private static final long CHAT_TASK_DELAY = 0L;
     private static final long CHAT_TASK_PERIOD = 1L;
@@ -29,32 +29,32 @@ public class ChannelMessageDisplay implements MessageDisplayStrategy {
     private final NMSHandler nmsHandler;
     private final ChannelManager channelManager;
     private final List<IWharStand> wharStands = new ArrayList<>();
-    
+
     public ChannelMessageDisplay(ChatConfig config, SoundManager soundManager, NMSHandler nmsHandler, ChannelManager channelManager) {
         this.config = config;
         this.soundManager = soundManager;
         this.nmsHandler = nmsHandler;
         this.channelManager = channelManager;
     }
-    
+
     public void displayChannelMessage(Player player, String message, String channelName) {
         if (player == null || message == null || channelName == null) {
             PLUGIN.getLogger().warning("Invalid parameters for displayChannelMessage: player=" + player + ", message=" + message + ", channelName=" + channelName);
             return;
         }
-        
+
         ChannelManager.ChannelConfig channelConfig = channelManager.getChannel(channelName);
         if (channelConfig == null) {
             PLUGIN.getLogger().warning("Channel configuration not found: " + channelName);
             return;
         }
-        
+
         List<Player> channelPlayers = channelManager.getChannelPlayers(player, channelName, channelConfig.range());
         if (channelPlayers == null || channelPlayers.isEmpty()) {
             PLUGIN.getLogger().info("No players found in channel: " + channelName);
             return;
         }
-        
+
         IWharStand wharStand = createChannelWharStand(player, channelPlayers, channelConfig);
         if (wharStand == null) {
             PLUGIN.getLogger().warning("Failed to create WharStand for player: " + player.getName());
@@ -63,7 +63,7 @@ public class ChannelMessageDisplay implements MessageDisplayStrategy {
 
         new BukkitRunnable() {
             int i = 0;
-            
+
             @Override
             public void run() {
                 try {
@@ -72,9 +72,9 @@ public class ChannelMessageDisplay implements MessageDisplayStrategy {
                         cancel();
                         return;
                     }
-                    
+
                     wharStand.teleport(player.getEyeLocation().add(0, config.height(), 0));
-                    
+
                     if (i < message.length()) {
                         wharStand.appendToCustomName(String.valueOf(message.charAt(i)));
                         wharStand.reloadEntity(); // Needs to be reloaded to update the name and location with new packets
@@ -96,30 +96,30 @@ public class ChannelMessageDisplay implements MessageDisplayStrategy {
             }
         }.runTaskTimer(PLUGIN, CHAT_TASK_DELAY, CHAT_TASK_PERIOD);
     }
-    
+
     @Override
     public void displayMessage(Player player, String message) {
         String channelName = channelManager.getPlayerChannel(player);
         displayChannelMessage(player, message, channelName);
     }
-    
+
     private IWharStand createChannelWharStand(Player player, List<Player> channelPlayers, ChannelManager.ChannelConfig channelConfig) {
         IWharStand wharStand = nmsHandler.getWharStand(
-            player.getEyeLocation().add(0, config.height(), 0),
-            channelPlayers
+                player.getEyeLocation().add(0, config.height(), 0),
+                channelPlayers
         );
-        
+
         String customName = ChatColor.translateAlternateColorCodes('&', channelConfig.color());
         wharStand.setName(customName);
-        
+
         wharStands.add(wharStand);
         return wharStand;
     }
-    
+
     private int getMinShowTime(String message) {
         return (int) Math.ceil(message.length() / (double) TICKS_PER_SECOND) + config.duration();
     }
-    
+
     private void cleanup(IWharStand wharStand) {
         wharStands.remove(wharStand);
         wharStand.destroyEntity();

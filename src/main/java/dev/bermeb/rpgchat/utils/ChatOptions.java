@@ -44,6 +44,7 @@ public class ChatOptions {
                     new Option("Chat.ChannelBeta", OptionType.BOOLEAN),
                     new Option("Chat.Channels", OptionType.STRING_LIST),
                     new Option("Chat.Worlds", OptionType.STRING_LIST),
+                    new Option("Chat.HideMessages.Regex", OptionType.STRING_LIST),
                     new Option("Chat.Behavior.Filter.CensorSymbol", OptionType.STRING),
                     new Option("Chat.Behavior.Filter.BadWords", OptionType.STRING_LIST),
                     new Option("Chat.Behavior.Cooldown", OptionType.INT),
@@ -90,9 +91,9 @@ public class ChatOptions {
         Object value = optionMap.get(key);
         if (value instanceof List<?> list) {
             return list.stream()
-                .filter(String.class::isInstance)
-                .map(String.class::cast)
-                .collect(Collectors.toCollection(ArrayList::new));
+                    .filter(String.class::isInstance)
+                    .map(String.class::cast)
+                    .collect(Collectors.toCollection(ArrayList::new));
         }
         return new ArrayList<>();
     }
