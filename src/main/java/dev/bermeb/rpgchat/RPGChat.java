@@ -29,7 +29,7 @@ public class RPGChat extends JavaPlugin {
         this.chatUtils = new ChatUtils();
 
         // Only needed for channel management via PersistentDataContainers
-        if(this.getConfig().getBoolean(("Options.Chat.ChannelBeta"))) {
+        if (this.getConfig().getBoolean(("Options.Chat.ChannelBeta"))) {
             this.namespacedKey = new NamespacedKey(this, "rpgchat_channel");
         }
 
@@ -43,7 +43,8 @@ public class RPGChat extends JavaPlugin {
         // removeStands() will throw an exception
         try {
             chatUtils.removeStands();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         reloadConfig();
         saveConfig();
     }
@@ -64,7 +65,6 @@ public class RPGChat extends JavaPlugin {
         getConfig().addDefault("Options.Whispered.Sound.Pitch", 1.0);
         getConfig().addDefault("Options.Chat.HideBaseChat", true);
         getConfig().addDefault("Options.Chat.HideWhisperedBaseChat", true);
-        getConfig().addDefault("Options.Compatibility.PlaceholderAPI.enabled", false);
         getConfig().addDefault("Options.Compatibility.ChatControl.enabled", false);
         getConfig().addDefault("Options.Compatibility.ChatControl.enabled_channels", List.of("global"));
         getConfig().addDefault("Options.Chat.Duration", 5);
@@ -98,7 +98,7 @@ public class RPGChat extends JavaPlugin {
      * and disables the plugin with formatting.
      *
      * @param version The version of the plugin or Minecraft that may not be supported.
-     * @param e The exception to log.
+     * @param e       The exception to log.
      */
     private void logException(String version, Exception e) {
         logger.log(Level.SEVERE, "----------------------------------------------------------");
@@ -116,8 +116,12 @@ public class RPGChat extends JavaPlugin {
         chatUtils.reloadConfig();
     }
 
-    public ChatOptions getChatOptions() { return chatOptions; }
+    public ChatOptions getChatOptions() {
+        return chatOptions;
+    }
 
     // Needed for channel management via PersistentDataContainers
-    public NamespacedKey getChannelKey() { return namespacedKey; }
+    public NamespacedKey getChannelKey() {
+        return namespacedKey;
+    }
 }
