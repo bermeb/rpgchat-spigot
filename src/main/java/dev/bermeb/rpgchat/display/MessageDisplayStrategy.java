@@ -6,5 +6,6 @@ import org.bukkit.entity.Player;
 public interface MessageDisplayStrategy {
     void displayMessage(Player player, String message);
     void cleanup();
+    void cleanupPlayer(Player player);
     void reloadConfig(ChatConfig config);
 }

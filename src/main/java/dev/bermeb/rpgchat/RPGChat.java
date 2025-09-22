@@ -29,7 +29,7 @@ public class RPGChat extends JavaPlugin {
         this.chatUtils = new ChatUtils();
 
         // Only needed for channel management via PersistentDataContainers
-        if(this.getConfig().getBoolean(("Options.Chat.ChannelBeta"))) {
+        if (this.getConfig().getBoolean(("Options.Chat.ChannelBeta"))) {
             this.namespacedKey = new NamespacedKey(this, "rpgchat_channel");
         }
 
@@ -72,6 +72,7 @@ public class RPGChat extends JavaPlugin {
         getConfig().addDefault("Options.Chat.MaxLength", -1);
         getConfig().addDefault("Options.Chat.CustomPrefixes", false);
         getConfig().addDefault("Options.Chat.ChannelBeta", false);
+        getConfig().addDefault("Options.Chat.NewMessagePriority", false);
         getConfig().addDefault("Options.Chat.Prefixes", Arrays.asList("Admin|&cAdmin&7: ", "Mod|&1Mod&7: ", "Player|&7Player: "));
         getConfig().addDefault("Options.Chat.Channels", Arrays.asList("admin|10|&c", "normal|-1|&f"));
         getConfig().addDefault("Options.Chat.Worlds", Arrays.asList("world", "world_nether", "world_the_end"));
@@ -98,7 +99,7 @@ public class RPGChat extends JavaPlugin {
      * and disables the plugin with formatting.
      *
      * @param version The version of the plugin or Minecraft that may not be supported.
-     * @param e The exception to log.
+     * @param e       The exception to log.
      */
     private void logException(String version, Exception e) {
         logger.log(Level.SEVERE, "----------------------------------------------------------");
@@ -116,8 +117,12 @@ public class RPGChat extends JavaPlugin {
         chatUtils.reloadConfig();
     }
 
-    public ChatOptions getChatOptions() { return chatOptions; }
+    public ChatOptions getChatOptions() {
+        return chatOptions;
+    }
 
     // Needed for channel management via PersistentDataContainers
-    public NamespacedKey getChannelKey() { return namespacedKey; }
+    public NamespacedKey getChannelKey() {
+        return namespacedKey;
+    }
 }
