@@ -3,7 +3,7 @@ version: ${project.version}
 api-version: ${api.version}
 author: ${plugin.author}
 main: dev.bermeb.rpgchat.RPGChat
-softdepend: [PlaceholderAPI, ChatControl]
+softdepend: [ ChatControl ]
 commands:
   rpgchat:
     description: Command for managing RPGChat
