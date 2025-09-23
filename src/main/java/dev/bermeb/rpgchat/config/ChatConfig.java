@@ -23,8 +23,7 @@ public record ChatConfig(
             String symbol,
             SoundConfig sound,
             boolean hideBaseChat
-    ) {
-    }
+    ) {}
 
     public record WhisperedChatConfig(
             String color,
@@ -32,44 +31,32 @@ public record ChatConfig(
             double range,
             SoundConfig sound,
             boolean hideBaseChat
-    ) {
-    }
+    ) {}
 
     public record SoundConfig(
             Sound sound,
             float volume,
             float pitch
-    ) {
-    }
+    ) {}
 
     public record ChatBehaviorConfig(
             FilterConfig filter,
             int cooldown,
             boolean antiRepeat
-    ) {
-    }
+    ) {}
 
     public record FilterConfig(
             String censorSymbol,
             List<String> badWords,
             List<String> wontShowRegex
-    ) {
-    }
+    ) {}
 
     public record CompatibilityConfig(
-            PlaceholderAPIConfig placeholderAPI,
-            ChatControlConfig chatControl
-    ) {
-    }
-
-    public record PlaceholderAPIConfig(
-            boolean enabled
-    ) {
-    }
+        ChatControlConfig chatControl
+    ) {}
 
     public record ChatControlConfig(
             boolean enabled,
             List<String> enabledChannels
-    ) {
-    }
+    ) {}
 }

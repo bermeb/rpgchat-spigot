@@ -36,7 +36,6 @@ mvn clean package -P v1_21_R5
 - Spigot/Paper 1.19.2+
 
 ### Optional
-- PlaceholderAPI - For dynamic placeholders in messages
 - ChatControl - Extended chat management integration
 
 ## Development

@@ -49,7 +49,6 @@ public class ChatOptions {
                     new Option("Chat.Behavior.Filter.BadWords", OptionType.STRING_LIST),
                     new Option("Chat.Behavior.Cooldown", OptionType.INT),
                     new Option("Chat.Behavior.AntiRepeat", OptionType.BOOLEAN),
-                    new Option("Compatibility.PlaceholderAPI.enabled", OptionType.BOOLEAN),
                     new Option("Compatibility.ChatControl.enabled", OptionType.BOOLEAN),
                     new Option("Compatibility.ChatControl.enabled_channels", OptionType.STRING_LIST)
             ).forEach(this::addOption);
