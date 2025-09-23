@@ -27,6 +27,7 @@ public class WhisperedMessageDisplay implements MessageDisplayStrategy {
     private final NMSHandler nmsHandler;
     private final ConcurrentHashMap<Player, IWharStand> playerWharStands = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Player, Integer> displayProgress = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Player, BukkitRunnable> activeTasks = new ConcurrentHashMap<>();
 
     public WhisperedMessageDisplay(ChatConfig config, SoundManager soundManager, NMSHandler nmsHandler) {
         this.config = config;
@@ -41,7 +42,7 @@ public class WhisperedMessageDisplay implements MessageDisplayStrategy {
 
         displayProgress.put(player, 0);
 
-        new BukkitRunnable() {
+        BukkitRunnable displayTask = new BukkitRunnable() {
             @Override
             public void run() {
                 // Teleport the WharStand to the player's eye location with the specified height
@@ -63,6 +64,7 @@ public class WhisperedMessageDisplay implements MessageDisplayStrategy {
                         playerWharStands.remove(player);
                         wharStand.destroyEntity();
                         displayProgress.remove(player);
+                        activeTasks.remove(player);
                         cancel();
                         return;
                     } else if (i == message.length() + 1) {
@@ -71,10 +73,19 @@ public class WhisperedMessageDisplay implements MessageDisplayStrategy {
                     displayProgress.put(player, i);
                 }
             }
-        }.runTaskTimer(PLUGIN, CHAT_TASK_DELAY, CHAT_TASK_PERIOD);
+        };
+
+        activeTasks.put(player, displayTask);
+        displayTask.runTaskTimer(PLUGIN, CHAT_TASK_DELAY, CHAT_TASK_PERIOD);
     }
 
     private IWharStand createWharStand(Player player, List<Player> playersInRange) {
+        // Cancel any existing task for this player
+        BukkitRunnable existingTask = activeTasks.get(player);
+        if (existingTask != null) {
+            existingTask.cancel();
+        }
+
         // Remove existing whar stand for this player if it exists
         IWharStand existingStand = playerWharStands.get(player);
         if (existingStand != null) {
@@ -130,6 +141,8 @@ public class WhisperedMessageDisplay implements MessageDisplayStrategy {
 
     @Override
     public void cleanup() {
+        activeTasks.values().forEach(BukkitRunnable::cancel);
+        activeTasks.clear();
         playerWharStands.values().forEach(IWharStand::destroyEntity);
         playerWharStands.clear();
         displayProgress.clear();
@@ -137,6 +150,10 @@ public class WhisperedMessageDisplay implements MessageDisplayStrategy {
 
     @Override
     public void cleanupPlayer(Player player) {
+        BukkitRunnable task = activeTasks.remove(player);
+        if (task != null) {
+            task.cancel();
+        }
         displayProgress.remove(player);
         IWharStand wharStand = playerWharStands.remove(player);
         if (wharStand != null) {
