@@ -6,7 +6,7 @@
 
     <groupId>dev.bermeb</groupId>
     <artifactId>RPGChat</artifactId>
-    <version>2.4.0</version>
+    <version>2.4.1</version>
 
     <properties>
         <!-- Java Configuration -->
@@ -523,6 +523,14 @@
             <artifactId>ChatControl</artifactId>
             <version>11.3.5</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- Annotations -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>26.0.2</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
