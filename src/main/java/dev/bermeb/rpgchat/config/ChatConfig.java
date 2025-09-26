@@ -52,12 +52,7 @@ public record ChatConfig(
     ) {}
 
     public record CompatibilityConfig(
-        PlaceholderAPIConfig placeholderAPI,
         ChatControlConfig chatControl
-    ) {}
-
-    public record PlaceholderAPIConfig(
-        boolean enabled
     ) {}
 
     public record ChatControlConfig(

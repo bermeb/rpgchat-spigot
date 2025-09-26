@@ -3,7 +3,6 @@ package dev.bermeb.rpgchat.listeners;
 import dev.bermeb.rpgchat.RPGChat;
 import dev.bermeb.rpgchat.utils.ChatUtils;
 import dev.bermeb.rpgchat.config.ChatConfig;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -67,8 +66,6 @@ public class PlayerChat implements Listener {
             return;
         }
 
-        message = handlePlaceholderAPI(player, message);
-
         chatUtils.addToChatQueue(event.getPlayer(), message, whispered);
     }
 
@@ -88,7 +85,7 @@ public class PlayerChat implements Listener {
         if (config.compatibility().chatControl().enabled()
                 && PLUGIN.getServer().getPluginManager().getPlugin("ChatControl") != null) {
             final String targetName = SenderCache.from(player).getConversingPlayerName();
-            if(!Objects.isNull(targetName)) {
+            if (!Objects.isNull(targetName)) {
                 return true;
             }
 
@@ -98,16 +95,8 @@ public class PlayerChat implements Listener {
         return false;
     }
 
-    private String handlePlaceholderAPI(Player player, String message) {
-        if (config.compatibility().placeholderAPI().enabled()
-                && PLUGIN.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            return PlaceholderAPI.setPlaceholders(player, message);
-        }
-        return message;
-    }
-
     private void handleCooldown(Player player) {
-        if(this.chatCooldown > 0 && !player.hasPermission("RPGChat.Bypass")) {
+        if (this.chatCooldown > 0 && !player.hasPermission("RPGChat.Bypass")) {
             cooldownList.add(player);
             new BukkitRunnable() {
                 @Override
@@ -144,11 +133,11 @@ public class PlayerChat implements Listener {
         try {
             final PlayerCache playerCache = PlayerCache.fromCached(player);
             final Channel writeChannel = playerCache.getWriteChannel();
-            
+
             if (writeChannel != null) {
                 final String channelName = writeChannel.getName();
                 final List<String> enabledChannels = config.compatibility().chatControl().enabledChannels();
-                
+
                 // If player is in a channel that's not in the enabled_channels list, don't show RPGChat bubble
                 if (!enabledChannels.contains(channelName)) {
                     return true; // Return true to skip RPGChat processing
@@ -158,7 +147,7 @@ public class PlayerChat implements Listener {
             // If there's any error with ChatControl integration, log it and continue
             PLUGIN.getLogger().warning("Error checking ChatControl channel compatibility: " + e.getMessage());
         }
-        
+
         return false; // Allow RPGChat to continue processing
     }
 }

@@ -43,7 +43,8 @@ public class RPGChat extends JavaPlugin {
         // removeStands() will throw an exception
         try {
             chatUtils.removeStands();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         reloadConfig();
         saveConfig();
     }
@@ -64,7 +65,6 @@ public class RPGChat extends JavaPlugin {
         getConfig().addDefault("Options.Whispered.Sound.Pitch", 1.0);
         getConfig().addDefault("Options.Chat.HideBaseChat", true);
         getConfig().addDefault("Options.Chat.HideWhisperedBaseChat", true);
-        getConfig().addDefault("Options.Compatibility.PlaceholderAPI.enabled", false);
         getConfig().addDefault("Options.Compatibility.ChatControl.enabled", false);
         getConfig().addDefault("Options.Compatibility.ChatControl.enabled_channels", List.of("global"));
         getConfig().addDefault("Options.Chat.Duration", 5);

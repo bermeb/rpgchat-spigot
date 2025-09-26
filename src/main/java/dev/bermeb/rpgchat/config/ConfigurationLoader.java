@@ -63,13 +63,10 @@ public class ConfigurationLoader {
 
     private static ChatConfig.CompatibilityConfig loadCompatibilityConfig(ChatOptions chatOptions) {
         return new ChatConfig.CompatibilityConfig(
-                new ChatConfig.PlaceholderAPIConfig(
-                        chatOptions.getBoolean("Compatibility.PlaceholderAPI.enabled")
-                ),
-                new ChatConfig.ChatControlConfig(
-                        chatOptions.getBoolean("Compatibility.ChatControl.enabled"),
-                        chatOptions.getStringList("Compatibility.ChatControl.enabled_channels")
-                )
+            new ChatConfig.ChatControlConfig(
+                chatOptions.getBoolean("Compatibility.ChatControl.enabled"),
+                chatOptions.getStringList("Compatibility.ChatControl.enabled_channels")
+            )
         );
     }
 }
