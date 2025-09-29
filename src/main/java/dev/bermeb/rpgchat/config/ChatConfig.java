@@ -14,6 +14,7 @@ public record ChatConfig(
     int maxLength,
     boolean customPrefixes,
     boolean channelBeta,
+    boolean newMessagePriority,
     List<String> prefixes,
     List<String> channels,
     List<String> worlds

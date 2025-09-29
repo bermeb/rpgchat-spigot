@@ -46,15 +46,26 @@ public class ChatRunnable extends BukkitRunnable {
 
     private void processNormalQueue() {
         queueManager.getAllNormalQueues().forEach((player, messageList) -> {
-            if (!chatMap.containsKey(player) && !messageList.isEmpty()) {
+            if (player == null || !player.isOnline()) {
+                return;
+            }
+
+            boolean canProcess = !chatMap.containsKey(player);
+            boolean hasNewMessagePriority = chatUtils.getConfig().newMessagePriority();
+
+            if ((canProcess || hasNewMessagePriority) && !messageList.isEmpty()) {
+                if (hasNewMessagePriority && chatMap.containsKey(player)) {
+                    chatUtils.removePlayerStands(player);
+                }
+
                 String message = messageList.get(0); // Using .get(0) for Java 17 Support
                 chatUtils.displayNormalMessage(player, message);
                 messageList.remove(0); // Using .remove(0) for Java 17 Support
-                
+
                 if (messageList.isEmpty()) {
                     queueManager.getAllNormalQueues().remove(player);
                 }
-                
+
                 chatMap.put(player, Pair.of(0, chatUtils.getMinShowTime(message)));
             }
         });
@@ -62,15 +73,26 @@ public class ChatRunnable extends BukkitRunnable {
 
     private void processWhisperedQueue() {
         queueManager.getAllWhisperedQueues().forEach((player, messageList) -> {
-            if (!chatMap.containsKey(player) && !messageList.isEmpty()) {
+            if (player == null || !player.isOnline()) {
+                return;
+            }
+
+            boolean canProcess = !chatMap.containsKey(player);
+            boolean hasNewMessagePriority = chatUtils.getConfig().newMessagePriority();
+
+            if ((canProcess || hasNewMessagePriority) && !messageList.isEmpty()) {
+                if (hasNewMessagePriority && chatMap.containsKey(player)) {
+                    chatUtils.removePlayerStands(player);
+                }
+
                 String message = messageList.get(0); // Using .get(0) for Java 17 Support
                 chatUtils.displayWhisperedMessage(player, message);
                 messageList.remove(0); // Using .remove(0) for Java 17 Support
-                
+
                 if (messageList.isEmpty()) {
                     queueManager.getAllWhisperedQueues().remove(player);
                 }
-                
+
                 chatMap.put(player, Pair.of(0, chatUtils.getMinShowTime(message)));
             }
         });
@@ -78,21 +100,32 @@ public class ChatRunnable extends BukkitRunnable {
 
     private void processChannelQueue() {
         queueManager.getAllChannelQueues().forEach((player, channelMap) -> {
-            if (!chatMap.containsKey(player)) {
+            if (player == null || !player.isOnline()) {
+                return;
+            }
+
+            boolean canProcess = !chatMap.containsKey(player);
+            boolean hasNewMessagePriority = chatUtils.getConfig().newMessagePriority();
+
+            if (canProcess || hasNewMessagePriority) {
+                if (hasNewMessagePriority && chatMap.containsKey(player)) {
+                    chatUtils.removePlayerStands(player);
+                }
+
                 channelMap.forEach((channel, messageList) -> {
                     if (!messageList.isEmpty()) {
                         String message = messageList.get(0); // Using .get(0) for Java 17 Support
                         chatUtils.displayChannelMessage(player, message, channel);
                         messageList.remove(0); // Using .remove(0) for Java 17 Support
-                        
+
                         if (messageList.isEmpty()) {
                             channelMap.remove(channel);
                         }
-                        
+
                         chatMap.put(player, Pair.of(0, chatUtils.getMinShowTime(message)));
                     }
                 });
-                
+
                 // Remove empty channel map
                 if (channelMap.isEmpty()) {
                     queueManager.getAllChannelQueues().remove(player);
@@ -107,16 +140,16 @@ public class ChatRunnable extends BukkitRunnable {
             if (player == null || !player.isOnline()) {
                 return true;
             }
-            
+
             Pair<Integer, Integer> pair = entry.getValue();
             int currentTime = pair.getFirst();
             int minShowTime = pair.getSecond();
-            
+
             if (currentTime < minShowTime) {
                 chatMap.put(player, Pair.of(currentTime + 1, minShowTime));
                 return false;
             }
-            
+
             return true;
         });
     }
