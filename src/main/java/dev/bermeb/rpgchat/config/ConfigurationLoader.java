@@ -16,6 +16,7 @@ public class ConfigurationLoader {
                 chatOptions.getInteger("Chat.MaxLength"),
                 chatOptions.getBoolean("Chat.CustomPrefixes"),
                 chatOptions.getBoolean("Chat.ChannelBeta"),
+                chatOptions.getBoolean("Chat.NewMessagePriority"),
                 chatOptions.getStringList("Chat.Prefixes"),
                 chatOptions.getStringList("Chat.Channels"),
                 chatOptions.getStringList("Chat.Worlds")

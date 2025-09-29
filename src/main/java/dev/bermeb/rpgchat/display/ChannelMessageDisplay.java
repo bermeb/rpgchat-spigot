@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ChannelMessageDisplay implements MessageDisplayStrategy {
 
@@ -28,7 +28,8 @@ public class ChannelMessageDisplay implements MessageDisplayStrategy {
     private final SoundManager soundManager;
     private final NMSHandler nmsHandler;
     private final ChannelManager channelManager;
-    private final List<IWharStand> wharStands = new ArrayList<>();
+    private final ConcurrentHashMap<Player, IWharStand> playerWharStands = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Player, BukkitRunnable> activeTasks = new ConcurrentHashMap<>();
 
     public ChannelMessageDisplay(ChatConfig config, SoundManager soundManager, NMSHandler nmsHandler, ChannelManager channelManager) {
         this.config = config;
@@ -61,14 +62,15 @@ public class ChannelMessageDisplay implements MessageDisplayStrategy {
             return;
         }
 
-        new BukkitRunnable() {
+        BukkitRunnable displayTask = new BukkitRunnable() {
             int i = 0;
 
             @Override
             public void run() {
                 try {
                     if (!player.isOnline()) {
-                        cleanup(wharStand);
+                        cleanup(player, wharStand);
+                        activeTasks.remove(player);
                         cancel();
                         return;
                     }
@@ -83,18 +85,23 @@ public class ChannelMessageDisplay implements MessageDisplayStrategy {
                         soundManager.playChannelChatSound(player.getLocation(), channelPlayers, config.normal().sound());
                         i++;
                     } else if (i == getMinShowTime(message) * TICKS_PER_SECOND + SHOW_TIME_OFFSET) {
-                        cleanup(wharStand);
+                        cleanup(player, wharStand);
+                        activeTasks.remove(player);
                         cancel();
                     } else {
                         i++;
                     }
                 } catch (Exception e) {
                     PLUGIN.getLogger().warning("Error in chat display task for player " + player.getName() + ": " + e.getMessage());
-                    cleanup(wharStand);
+                    cleanup(player, wharStand);
+                    activeTasks.remove(player);
                     cancel();
                 }
             }
-        }.runTaskTimer(PLUGIN, CHAT_TASK_DELAY, CHAT_TASK_PERIOD);
+        };
+
+        activeTasks.put(player, displayTask);
+        displayTask.runTaskTimer(PLUGIN, CHAT_TASK_DELAY, CHAT_TASK_PERIOD);
     }
 
     @Override
@@ -104,6 +111,18 @@ public class ChannelMessageDisplay implements MessageDisplayStrategy {
     }
 
     private IWharStand createChannelWharStand(Player player, List<Player> channelPlayers, ChannelManager.ChannelConfig channelConfig) {
+        // Cancel any existing task for this player
+        BukkitRunnable existingTask = activeTasks.get(player);
+        if (existingTask != null) {
+            existingTask.cancel();
+        }
+
+        // Remove existing whar stand for this player if it exists
+        IWharStand existingStand = playerWharStands.get(player);
+        if (existingStand != null) {
+            existingStand.destroyEntity();
+        }
+
         IWharStand wharStand = nmsHandler.getWharStand(
                 player.getEyeLocation().add(0, config.height(), 0),
                 channelPlayers
@@ -112,7 +131,7 @@ public class ChannelMessageDisplay implements MessageDisplayStrategy {
         String customName = ChatColor.translateAlternateColorCodes('&', channelConfig.color());
         wharStand.setName(customName);
 
-        wharStands.add(wharStand);
+        playerWharStands.put(player, wharStand);
         return wharStand;
     }
 
@@ -120,8 +139,8 @@ public class ChannelMessageDisplay implements MessageDisplayStrategy {
         return (int) Math.ceil(message.length() / (double) TICKS_PER_SECOND) + config.duration();
     }
 
-    private void cleanup(IWharStand wharStand) {
-        wharStands.remove(wharStand);
+    private void cleanup(Player player, IWharStand wharStand) {
+        playerWharStands.remove(player);
         wharStand.destroyEntity();
     }
 
@@ -132,7 +151,21 @@ public class ChannelMessageDisplay implements MessageDisplayStrategy {
 
     @Override
     public void cleanup() {
-        wharStands.forEach(IWharStand::destroyEntity);
-        wharStands.clear();
+        activeTasks.values().forEach(BukkitRunnable::cancel);
+        activeTasks.clear();
+        playerWharStands.values().forEach(IWharStand::destroyEntity);
+        playerWharStands.clear();
+    }
+
+    @Override
+    public void cleanupPlayer(Player player) {
+        BukkitRunnable task = activeTasks.remove(player);
+        if (task != null) {
+            task.cancel();
+        }
+        IWharStand wharStand = playerWharStands.remove(player);
+        if (wharStand != null) {
+            wharStand.destroyEntity();
+        }
     }
 }

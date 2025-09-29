@@ -5,18 +5,19 @@ import org.bukkit.Sound;
 import java.util.List;
 
 public record ChatConfig(
-        NormalChatConfig normal,
-        WhisperedChatConfig whispered,
-        ChatBehaviorConfig behavior,
-        CompatibilityConfig compatibility,
-        int duration,
-        double height,
-        int maxLength,
-        boolean customPrefixes,
-        boolean channelBeta,
-        List<String> prefixes,
-        List<String> channels,
-        List<String> worlds
+    NormalChatConfig normal,
+    WhisperedChatConfig whispered,
+    ChatBehaviorConfig behavior,
+    CompatibilityConfig compatibility,
+    int duration,
+    double height,
+    int maxLength,
+    boolean customPrefixes,
+    boolean channelBeta,
+    boolean newMessagePriority,
+    List<String> prefixes,
+    List<String> channels,
+    List<String> worlds
 ) {
     public record NormalChatConfig(
             String color,

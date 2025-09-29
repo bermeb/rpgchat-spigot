@@ -9,8 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NormalMessageDisplay implements MessageDisplayStrategy {
@@ -24,8 +22,9 @@ public class NormalMessageDisplay implements MessageDisplayStrategy {
     private ChatConfig config;
 
     private final SoundManager soundManager;
-    private final List<ArmorStand> armorStands = new ArrayList<>();
+    private final ConcurrentHashMap<Player, ArmorStand> playerArmorStands = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Player, Integer> displayProgress = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Player, BukkitRunnable> activeTasks = new ConcurrentHashMap<>();
 
     public NormalMessageDisplay(ChatConfig config, SoundManager soundManager) {
         this.config = config;
@@ -37,7 +36,7 @@ public class NormalMessageDisplay implements MessageDisplayStrategy {
         ArmorStand armorStand = createArmorStand(player);
         displayProgress.put(player, 0);
 
-        new BukkitRunnable() {
+        BukkitRunnable displayTask = new BukkitRunnable() {
             private final StringBuilder currentName = new StringBuilder();
 
             @Override
@@ -57,9 +56,10 @@ public class NormalMessageDisplay implements MessageDisplayStrategy {
                     i++;
 
                     if (i == (getMinShowTime(message) * TICKS_PER_SECOND + SHOW_TIME_OFFSET)) {
-                        armorStands.remove(armorStand);
+                        playerArmorStands.remove(player);
                         armorStand.remove();
                         displayProgress.remove(player);
+                        activeTasks.remove(player);
                         cancel();
                         return;
                     } else if (i == (message.length() + 1)) {
@@ -68,10 +68,25 @@ public class NormalMessageDisplay implements MessageDisplayStrategy {
                     displayProgress.put(player, i);
                 }
             }
-        }.runTaskTimer(PLUGIN, CHAT_TASK_DELAY, CHAT_TASK_PERIOD);
+        };
+
+        activeTasks.put(player, displayTask);
+        displayTask.runTaskTimer(PLUGIN, CHAT_TASK_DELAY, CHAT_TASK_PERIOD);
     }
 
     private ArmorStand createArmorStand(Player player) {
+        // Cancel any existing task for this player
+        BukkitRunnable existingTask = activeTasks.get(player);
+        if (existingTask != null) {
+            existingTask.cancel();
+        }
+
+        // Remove existing armor stand for this player if it exists
+        ArmorStand existingStand = playerArmorStands.get(player);
+        if (existingStand != null) {
+            existingStand.remove();
+        }
+
         ArmorStand armorStand = player.getWorld()
                 .spawn(player.getEyeLocation().add(0, config.height(), 0), ArmorStand.class);
 
@@ -89,7 +104,7 @@ public class NormalMessageDisplay implements MessageDisplayStrategy {
 
         armorStand.setCustomName(initialName);
 
-        armorStands.add(armorStand);
+        playerArmorStands.put(player, armorStand);
         return armorStand;
     }
 
@@ -112,8 +127,23 @@ public class NormalMessageDisplay implements MessageDisplayStrategy {
 
     @Override
     public void cleanup() {
-        armorStands.forEach(ArmorStand::remove);
-        armorStands.clear();
+        activeTasks.values().forEach(BukkitRunnable::cancel);
+        activeTasks.clear();
+        playerArmorStands.values().forEach(ArmorStand::remove);
+        playerArmorStands.clear();
         displayProgress.clear();
+    }
+
+    @Override
+    public void cleanupPlayer(Player player) {
+        BukkitRunnable task = activeTasks.remove(player);
+        if (task != null) {
+            task.cancel();
+        }
+        displayProgress.remove(player);
+        ArmorStand armorStand = playerArmorStands.remove(player);
+        if (armorStand != null) {
+            armorStand.remove();
+        }
     }
 }

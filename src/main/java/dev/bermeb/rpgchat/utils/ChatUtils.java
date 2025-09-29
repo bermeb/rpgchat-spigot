@@ -177,6 +177,12 @@ public class ChatUtils implements Listener {
         channelDisplay.cleanup();
     }
 
+    public void removePlayerStands(Player player) {
+        normalDisplay.cleanupPlayer(player);
+        whisperedDisplay.cleanupPlayer(player);
+        channelDisplay.cleanupPlayer(player);
+    }
+
     public void reloadConfig() {
         this.config = ConfigurationLoader.loadFromChatOptions(PLUGIN.getChatOptions());
         channelManager.loadChannels(config.channels());
