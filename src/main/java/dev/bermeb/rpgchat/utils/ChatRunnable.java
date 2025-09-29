@@ -46,13 +46,16 @@ public class ChatRunnable extends BukkitRunnable {
 
     private void processNormalQueue() {
         queueManager.getAllNormalQueues().forEach((player, messageList) -> {
+            if (player == null || !player.isOnline()) {
+                return;
+            }
+
             boolean canProcess = !chatMap.containsKey(player);
             boolean hasNewMessagePriority = chatUtils.getConfig().newMessagePriority();
 
             if ((canProcess || hasNewMessagePriority) && !messageList.isEmpty()) {
                 if (hasNewMessagePriority && chatMap.containsKey(player)) {
                     chatUtils.removePlayerStands(player);
-                    chatMap.remove(player);
                 }
 
                 String message = messageList.get(0); // Using .get(0) for Java 17 Support
@@ -70,13 +73,16 @@ public class ChatRunnable extends BukkitRunnable {
 
     private void processWhisperedQueue() {
         queueManager.getAllWhisperedQueues().forEach((player, messageList) -> {
+            if (player == null || !player.isOnline()) {
+                return;
+            }
+
             boolean canProcess = !chatMap.containsKey(player);
             boolean hasNewMessagePriority = chatUtils.getConfig().newMessagePriority();
 
             if ((canProcess || hasNewMessagePriority) && !messageList.isEmpty()) {
                 if (hasNewMessagePriority && chatMap.containsKey(player)) {
                     chatUtils.removePlayerStands(player);
-                    chatMap.remove(player);
                 }
 
                 String message = messageList.get(0); // Using .get(0) for Java 17 Support
@@ -94,13 +100,16 @@ public class ChatRunnable extends BukkitRunnable {
 
     private void processChannelQueue() {
         queueManager.getAllChannelQueues().forEach((player, channelMap) -> {
+            if (player == null || !player.isOnline()) {
+                return;
+            }
+
             boolean canProcess = !chatMap.containsKey(player);
             boolean hasNewMessagePriority = chatUtils.getConfig().newMessagePriority();
 
             if (canProcess || hasNewMessagePriority) {
                 if (hasNewMessagePriority && chatMap.containsKey(player)) {
                     chatUtils.removePlayerStands(player);
-                    chatMap.remove(player);
                 }
 
                 channelMap.forEach((channel, messageList) -> {
