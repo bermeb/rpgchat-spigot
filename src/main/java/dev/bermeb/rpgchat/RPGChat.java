@@ -73,6 +73,7 @@ public class RPGChat extends JavaPlugin {
         getConfig().addDefault("Options.Chat.CustomPrefixes", false);
         getConfig().addDefault("Options.Chat.ChannelBeta", false);
         getConfig().addDefault("Options.Chat.NewMessagePriority", false);
+        getConfig().addDefault("Options.Chat.HideMessages.Regex", List.of("^.*chat=.*$"));
         getConfig().addDefault("Options.Chat.Prefixes", Arrays.asList("Admin|&cAdmin&7: ", "Mod|&1Mod&7: ", "Player|&7Player: "));
         getConfig().addDefault("Options.Chat.Channels", Arrays.asList("admin|10|&c", "normal|-1|&f"));
         getConfig().addDefault("Options.Chat.Worlds", Arrays.asList("world", "world_nether", "world_the_end"));

@@ -54,7 +54,8 @@ public class ConfigurationLoader {
         return new ChatConfig.ChatBehaviorConfig(
                 new ChatConfig.FilterConfig(
                         chatOptions.getString("Chat.Behavior.Filter.CensorSymbol"),
-                        chatOptions.getStringList("Chat.Behavior.Filter.BadWords")
+                        chatOptions.getStringList("Chat.Behavior.Filter.BadWords"),
+                        chatOptions.getStringList("Chat.HideMessages.Regex")
                 ),
                 chatOptions.getInteger("Chat.Behavior.Cooldown"),
                 chatOptions.getBoolean("Chat.Behavior.AntiRepeat")

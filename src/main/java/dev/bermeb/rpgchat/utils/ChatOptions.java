@@ -45,6 +45,7 @@ public class ChatOptions {
                     new Option("Chat.Channels", OptionType.STRING_LIST),
                     new Option("Chat.Worlds", OptionType.STRING_LIST),
                     new Option("Chat.NewMessagePriority", OptionType.BOOLEAN),
+                    new Option("Chat.HideMessages.Regex", OptionType.STRING_LIST),
                     new Option("Chat.Behavior.Filter.CensorSymbol", OptionType.STRING),
                     new Option("Chat.Behavior.Filter.BadWords", OptionType.STRING_LIST),
                     new Option("Chat.Behavior.Cooldown", OptionType.INT),

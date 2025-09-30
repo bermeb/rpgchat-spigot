@@ -15,7 +15,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 
 public class ChatUtils implements Listener {
@@ -30,6 +33,8 @@ public class ChatUtils implements Listener {
     private final NormalMessageDisplay normalDisplay;
     private final WhisperedMessageDisplay whisperedDisplay;
     private final ChannelMessageDisplay channelDisplay;
+
+    private volatile Pattern[] compiledPatterns = new Pattern[0];
 
     public ChatUtils() {
         // Load configuration
@@ -60,12 +65,20 @@ public class ChatUtils implements Listener {
             PLUGIN.getLogger().log(Level.SEVERE, "Failed to get EntityRegister - Wrong or unsupported version!");
         }
 
+        // Precompile regex patterns
+        precompilePatterns();
+
         // Start chat processing
         new ChatRunnable(this);
     }
 
     public void addToChatQueue(Player player, String message, boolean whispered) {
         String processedMessage = processMessage(message);
+
+        // Check regex, mostly for interaction with different Chat plugins
+        if(shouldHideMessage(processedMessage)) {
+            return;
+        }
 
         if (config.channelBeta() && !whispered) {
             String channel = channelManager.getPlayerChannel(player);
@@ -114,6 +127,38 @@ public class ChatUtils implements Listener {
                 .collect(Collectors.joining(" "));
     }
 
+    private boolean shouldHideMessage(String message) {
+        Pattern[] patterns = compiledPatterns; // Local reference for thread safety
+        for (Pattern pattern : patterns) {
+            if (pattern.matcher(message).find()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void precompilePatterns() {
+        List<String> regexList = config.behavior().filter().wontShowRegex();
+        if (regexList == null || regexList.isEmpty()) {
+            compiledPatterns = new Pattern[0];
+            return;
+        }
+
+        compiledPatterns = regexList.stream()
+            .map(this::safeCompile)
+            .filter(Objects::nonNull)
+            .toArray(Pattern[]::new);
+    }
+
+    private Pattern safeCompile(String regex) {
+        try {
+            return Pattern.compile(regex);
+        } catch (PatternSyntaxException e) {
+            PLUGIN.getLogger().warning("Invalid regex pattern: " + regex + " - " + e.getMessage());
+            return null;
+        }
+    }
+
     public void displayNormalMessage(Player player, String message) {
         normalDisplay.displayMessage(player, message);
     }
@@ -144,6 +189,7 @@ public class ChatUtils implements Listener {
         normalDisplay.reloadConfig(config);
         whisperedDisplay.reloadConfig(config);
         channelDisplay.reloadConfig(config);
+        precompilePatterns();
     }
 
     public ChatQueueManager getQueueManager() {

@@ -20,35 +20,36 @@ public record ChatConfig(
     List<String> worlds
 ) {
     public record NormalChatConfig(
-        String color,
-        String symbol,
-        SoundConfig sound,
-        boolean hideBaseChat
+            String color,
+            String symbol,
+            SoundConfig sound,
+            boolean hideBaseChat
     ) {}
 
     public record WhisperedChatConfig(
-        String color,
-        String symbol,
-        double range,
-        SoundConfig sound,
-        boolean hideBaseChat
+            String color,
+            String symbol,
+            double range,
+            SoundConfig sound,
+            boolean hideBaseChat
     ) {}
 
     public record SoundConfig(
-        Sound sound,
-        float volume,
-        float pitch
+            Sound sound,
+            float volume,
+            float pitch
     ) {}
 
     public record ChatBehaviorConfig(
-        FilterConfig filter,
-        int cooldown,
-        boolean antiRepeat
+            FilterConfig filter,
+            int cooldown,
+            boolean antiRepeat
     ) {}
 
     public record FilterConfig(
-        String censorSymbol,
-        List<String> badWords
+            String censorSymbol,
+            List<String> badWords,
+            List<String> wontShowRegex
     ) {}
 
     public record CompatibilityConfig(
@@ -56,7 +57,7 @@ public record ChatConfig(
     ) {}
 
     public record ChatControlConfig(
-        boolean enabled,
-        List<String> enabledChannels
+            boolean enabled,
+            List<String> enabledChannels
     ) {}
 }
