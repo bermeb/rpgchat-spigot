@@ -9,7 +9,7 @@ A Minecraft Spigot plugin that displays chat messages as floating text above pla
 - **Multi-Channel Support**: Different chat channels with custom ranges and colors
 - **Word Filtering**: Configurable profanity filter with custom blacklists
 - **Sound Effects**: Customizable sounds for different message types
-- **Multi-Version Support**: Compatible with Minecraft 1.19.2 - 1.21.6
+- **Multi-Version Support**: Compatible with Minecraft 1.19.2 - 1.21.8
 
 ## Building
 
