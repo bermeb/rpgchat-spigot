@@ -10,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.mineacademy.chatcontrol.SenderCache;
 import org.mineacademy.chatcontrol.model.Channel;
 import org.mineacademy.chatcontrol.model.db.PlayerCache;
 
@@ -84,7 +83,8 @@ public class PlayerChat implements Listener {
     private boolean handleChatControlCompatibility(Player player) {
         if (config.compatibility().chatControl().enabled()
                 && PLUGIN.getServer().getPluginManager().getPlugin("ChatControl") != null) {
-            final String targetName = SenderCache.from(player).getConversingPlayerName();
+            final PlayerCache playerCache = PlayerCache.fromCached(player);
+            final String targetName = playerCache.getConversingPlayerName();
             if (!Objects.isNull(targetName)) {
                 return true;
             }
