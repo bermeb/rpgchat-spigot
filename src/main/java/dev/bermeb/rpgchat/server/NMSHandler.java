@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -15,9 +16,11 @@ public class NMSHandler {
     private final static String PACKAGE_NAME = "dev.bermeb.rpgchat.nms.";
 
     private final String version;
+    private final Constructor<? extends IWharStand> wharStandConstructor;
 
     public NMSHandler() {
         this.version = getServerVersion();
+        this.wharStandConstructor = getWarStandConstructor();
     }
 
     // This method retrieves the server version and maps it to the NMS version
@@ -31,23 +34,31 @@ public class NMSHandler {
         return packageName.substring(packageName.lastIndexOf('.') + 1);
     }
 
+    private Constructor<? extends IWharStand> getWarStandConstructor() {
+        String className = PACKAGE_NAME + version + ".WharStand";
+        try {
+            Class<? extends IWharStand> clazz = Class.forName(className)
+                    .asSubclass(IWharStand.class);
+            return clazz.getConstructor(Location.class, List.class);
+        } catch (ClassNotFoundException | ClassCastException | NoSuchMethodException exception) {
+            PLUGIN.logSevereError("Could not find entity.", exception, version);
+        }
+        return null;
+    }
+
     /**
      * Returns the NMS version used by the server.
      *
      * @return The NMS version as a string.
      */
     public IWharStand getWharStand(Location loc, List<Player> playerList) {
-        String className = PACKAGE_NAME + version + ".WharStand";
+        if(wharStandConstructor == null) return null;
         try {
-            Class<?> clazz = Class.forName(className);
-            if (IWharStand.class.isAssignableFrom(clazz)) {
-                return (IWharStand) clazz.getConstructor(Location.class, List.class).newInstance(loc, playerList);
-            }
-        } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
-                 NoSuchMethodException | IllegalAccessException exception) {
+            return wharStandConstructor.newInstance(loc, playerList);
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException exception) {
             PLUGIN.logSevereError("Could not find entity.", exception, version);
+            return null;
         }
-        return null;
     }
 
     /**
