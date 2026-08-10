@@ -14,8 +14,7 @@
              profile sets java.version itself; a JDK 25 can build all of them, while a
              JDK 21 cannot build the 26.x ones (javac 21 cannot read those class files). -->
         <java.version>25</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Plugin Versions -->
