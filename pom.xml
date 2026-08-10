@@ -31,9 +31,9 @@
         <jetbrains.version>26.1.0</jetbrains.version>
 
         <!-- Default Spigot Configuration (overridden by profiles) -->
-        <spigot.version>26.1.2-R0.1-SNAPSHOT</spigot.version>
-        <spigot.display.version>26.1.2</spigot.display.version>
-        <nms.version>v26_1_R1</nms.version>
+        <spigot.version>26.2-R0.1-SNAPSHOT</spigot.version>
+        <spigot.display.version>26.2</spigot.display.version>
+        <nms.version>v26_2_R1</nms.version>
         <api.version>1.21</api.version>
         <plugin.author>bermeb</plugin.author>
 

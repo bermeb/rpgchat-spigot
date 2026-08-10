@@ -23,29 +23,6 @@ public class NMSHandler {
         this.wharStandConstructor = getWarStandConstructor();
     }
 
-    // This method retrieves the server version and maps it to the NMS version
-    private String getServerVersion() {
-        String packageName = Bukkit.getServer().getClass().getPackage().getName();
-        // Since 1.20 the package name can be in a different format we check if it contains "craftbukkit"
-        // If yes, we need a different approach to get the NMS version
-        if(packageName.substring(packageName.lastIndexOf('.') + 1).equals("craftbukkit")){
-            return getVersionByBukkitVersion(Bukkit.getServer().getBukkitVersion());
-        }
-        return packageName.substring(packageName.lastIndexOf('.') + 1);
-    }
-
-    private Constructor<? extends IWharStand> getWarStandConstructor() {
-        String className = PACKAGE_NAME + version + ".WharStand";
-        try {
-            Class<? extends IWharStand> clazz = Class.forName(className)
-                    .asSubclass(IWharStand.class);
-            return clazz.getConstructor(Location.class, List.class);
-        } catch (ClassNotFoundException | ClassCastException | NoSuchMethodException exception) {
-            PLUGIN.logSevereError("Could not find entity.", exception, version);
-        }
-        return null;
-    }
-
     /**
      * Returns the NMS version used by the server.
      *
@@ -99,5 +76,29 @@ public class NMSHandler {
             case "26.2-R0.1-SNAPSHOT" -> "v26_2_R1";
             default -> "unidentified Bukkit version: " + bukkitVersion;
         };
+    }
+
+    // This method retrieves the server version and maps it to the NMS version
+    private String getServerVersion() {
+        String packageName = Bukkit.getServer().getClass().getPackage().getName();
+        // Since 1.20 the package name can be in a different format we check if it contains "craftbukkit"
+        // If yes, we need a different approach to get the NMS version
+        if(packageName.substring(packageName.lastIndexOf('.') + 1).equals("craftbukkit")){
+            return getVersionByBukkitVersion(Bukkit.getServer().getBukkitVersion());
+        }
+        return packageName.substring(packageName.lastIndexOf('.') + 1);
+    }
+
+    // Get the wharstand constructor once and reference it for each new instance
+    private Constructor<? extends IWharStand> getWarStandConstructor() {
+        String className = PACKAGE_NAME + version + ".WharStand";
+        try {
+            Class<? extends IWharStand> clazz = Class.forName(className)
+                    .asSubclass(IWharStand.class);
+            return clazz.getConstructor(Location.class, List.class);
+        } catch (ClassNotFoundException | ClassCastException | NoSuchMethodException exception) {
+            PLUGIN.logSevereError("Could not find entity.", exception, version);
+        }
+        return null;
     }
 }

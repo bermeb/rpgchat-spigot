@@ -69,8 +69,8 @@ import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.Breeze
 import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.WindCharge;
 import net.minecraft.world.entity.projectile.throwableitemprojectile.*;
 import net.minecraft.world.entity.vehicle.minecart.*;
+import net.minecraft.world.entity.monster.hoglin.Hoglin;
 import org.bukkit.craftbukkit.entity.boat.*;
-import org.bukkit.entity.Hoglin;
 
 import java.util.*;
 

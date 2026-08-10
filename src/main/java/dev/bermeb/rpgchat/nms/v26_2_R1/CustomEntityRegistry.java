@@ -53,6 +53,7 @@ import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.monster.breeze.Breeze;
 import net.minecraft.world.entity.monster.creaking.Creaking;
 import net.minecraft.world.entity.monster.cubemob.*;
+import net.minecraft.world.entity.monster.hoglin.Hoglin;
 import net.minecraft.world.entity.monster.illager.*;
 import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.monster.piglin.PiglinBrute;
@@ -71,7 +72,6 @@ import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.WindCh
 import net.minecraft.world.entity.projectile.throwableitemprojectile.*;
 import net.minecraft.world.entity.vehicle.minecart.*;
 import org.bukkit.craftbukkit.entity.boat.*;
-import org.bukkit.entity.Hoglin;
 
 import java.util.*;
 
