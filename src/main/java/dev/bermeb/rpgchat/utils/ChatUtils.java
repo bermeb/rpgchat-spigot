@@ -9,6 +9,7 @@ import dev.bermeb.rpgchat.queue.ChatQueueManager;
 import dev.bermeb.rpgchat.server.IEntityRegister;
 import dev.bermeb.rpgchat.server.NMSHandler;
 import dev.bermeb.rpgchat.sound.SoundManager;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,9 +26,12 @@ public class ChatUtils implements Listener {
 
     private static final RPGChat PLUGIN = JavaPlugin.getPlugin(RPGChat.class);
 
+    @Getter
     private ChatConfig config;
 
+    @Getter
     private final ChannelManager channelManager;
+    @Getter
     private final ChatQueueManager queueManager;
 
     private final NormalMessageDisplay normalDisplay;
@@ -190,18 +194,6 @@ public class ChatUtils implements Listener {
         whisperedDisplay.reloadConfig(config);
         channelDisplay.reloadConfig(config);
         precompilePatterns();
-    }
-
-    public ChatQueueManager getQueueManager() {
-        return queueManager;
-    }
-
-    public ChannelManager getChannelManager() {
-        return channelManager;
-    }
-
-    public ChatConfig getConfig() {
-        return config;
     }
 
     public int getMinShowTime(String message) {

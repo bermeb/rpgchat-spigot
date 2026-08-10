@@ -4,6 +4,7 @@ import dev.bermeb.rpgchat.commands.RPGChatCommands;
 import dev.bermeb.rpgchat.listeners.PlayerChat;
 import dev.bermeb.rpgchat.utils.ChatOptions;
 import dev.bermeb.rpgchat.utils.ChatUtils;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,6 +19,7 @@ public class RPGChat extends JavaPlugin {
 
     private Logger logger;
     private ChatUtils chatUtils;
+    @Getter
     private ChatOptions chatOptions;
     private NamespacedKey namespacedKey;
 
@@ -116,10 +118,6 @@ public class RPGChat extends JavaPlugin {
         saveConfig();
         chatOptions.reloadOptions();
         chatUtils.reloadConfig();
-    }
-
-    public ChatOptions getChatOptions() {
-        return chatOptions;
     }
 
     // Needed for channel management via PersistentDataContainers
