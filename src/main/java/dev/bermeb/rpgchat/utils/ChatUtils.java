@@ -192,19 +192,19 @@ public class ChatUtils implements Listener {
         precompilePatterns();
     }
 
-    public ChatQueueManager getQueueManager() {
-        return queueManager;
-    }
-
-    public ChannelManager getChannelManager() {
-        return channelManager;
+    public int getMinShowTime(String message) {
+        return (int) Math.ceil(message.length() / 20.0) + config.duration();
     }
 
     public ChatConfig getConfig() {
         return config;
     }
 
-    public int getMinShowTime(String message) {
-        return (int) Math.ceil(message.length() / 20.0) + config.duration();
+    public ChannelManager getChannelManager() {
+        return channelManager;
+    }
+
+    public ChatQueueManager getQueueManager() {
+        return queueManager;
     }
 }

@@ -9,12 +9,13 @@ A Minecraft Spigot plugin that displays chat messages as floating text above pla
 - **Multi-Channel Support**: Different chat channels with custom ranges and colors
 - **Word Filtering**: Configurable profanity filter with custom blacklists
 - **Sound Effects**: Customizable sounds for different message types
-- **Multi-Version Support**: Compatible with Minecraft 1.19.2 - 1.21.10
+- **Multi-Version Support**: Compatible with Minecraft 1.19.2 - 1.21.11 and 26.1.2 / 26.2
 
 ## Building
 
 ### Prerequisites
-- Java 21+
+- Java 21+ for the 1.19 - 1.21 profiles, Java 25+ for the 26.x profiles.
+  A single JDK 25 builds every profile, so that is the simplest setup.
 - Maven 3.6+
 - Access to Spigot BuildTools or pre-built Spigot dependencies
 
@@ -25,15 +26,20 @@ A Minecraft Spigot plugin that displays chat messages as floating text above pla
 mvn clean package
 
 # Build specific version
-mvn clean package -P v1_21_R6
+mvn clean package -P v26_2_R1
 
-# Available profiles: v1_19_R1, v1_19_R2, v1_19_R3, v1_20_R1, v1_20_R2, v1_20_R3, v1_20_R4, v1_21_R1, v1_21_R2, v1_21_R3, v1_21_R4, v1_21_R5, v1_21_R6
+# Available profiles: v1_19_R1, v1_19_R2, v1_19_R3, v1_20_R1, v1_20_R2, v1_20_R3, v1_20_R4, v1_21_R1, v1_21_R2, v1_21_R3, v1_21_R4, v1_21_R5, v1_21_R6, v1_21_R7, v26_1_R1, v26_2_R1
 ```
+
+Up to 1.21.11 the server is Spigot-mapped, so the build compiles against the
+`remapped-mojang` artifact and remaps the plugin back to Spigot names. From 26.1 on
+Spigot ships Mojang-mapped and drops the versioned `craftbukkit` package, so the 26.x
+profiles use no classifier and skip the remap step entirely.
 
 ## Dependencies
 
 ### Required
-- Spigot/Paper 1.19.2+
+- Spigot/Paper 1.19.2 - 1.21.11, or 26.1.2 / 26.2
 
 ### Optional
 - ChatControl - Extended chat management integration

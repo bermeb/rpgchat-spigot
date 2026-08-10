@@ -6,34 +6,51 @@
 
     <groupId>dev.bermeb</groupId>
     <artifactId>RPGChat</artifactId>
-    <version>2.5.2</version>
+    <version>2.5.3</version>
 
     <properties>
-        <!-- Java Configuration -->
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <!-- Java Configuration.
+             Minecraft 26.x runs on Java 25, the 1.19 - 1.21 lines on Java 21. Every
+             profile sets java.version itself; a JDK 25 can build all of them, while a
+             JDK 21 cannot build the 26.x ones (javac 21 cannot read those class files). -->
+        <java.version>25</java.version>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Plugin Versions -->
         <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
-        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
-        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
-        <exec-maven-plugin.version>3.5.1</exec-maven-plugin.version>
-        <specialsource-maven-plugin.version>2.0.4</specialsource-maven-plugin.version>
+        <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
+        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
+        <maven-jar-plugin.version>3.5.1</maven-jar-plugin.version>
+        <exec-maven-plugin.version>3.6.3</exec-maven-plugin.version>
+        <specialsource-maven-plugin.version>2.0.5</specialsource-maven-plugin.version>
 
         <!-- Dependency Versions -->
-        <chatcontrol.version>11.4.6</chatcontrol.version>
-        <jetbrains.version>26.0.2</jetbrains.version>
+        <chatcontrol.version>11.8.11</chatcontrol.version>
+        <jetbrains.version>26.1.0</jetbrains.version>
 
         <!-- Default Spigot Configuration (overridden by profiles) -->
-        <spigot.version>1.21.10-R0.1-SNAPSHOT</spigot.version>
-        <spigot.display.version>1.21.10</spigot.display.version>
-        <nms.version>v1_21_R6</nms.version>
+        <spigot.version>26.2-R0.1-SNAPSHOT</spigot.version>
+        <spigot.display.version>26.2</spigot.display.version>
+        <nms.version>v26_2_R1</nms.version>
         <api.version>1.21</api.version>
         <plugin.author>bermeb</plugin.author>
 
+        <!-- Mapping Configuration.
+             Up to 1.21.11 the Spigot server is Spigot-mapped, so those profiles compile
+             against the "remapped-mojang" artifact and remap the plugin back to Spigot
+             names on package. From 26.1 on Spigot ships Mojang-mapped, so there is neither
+             a remapped artifact nor anything to remap: no classifier, and the specialsource
+             executions are disabled by binding them to a non-existent phase.
+
+             These defaults track the newest supported version (see above) so that a
+             profile-less build stays consistent. Every profile restates them, so changing
+             the default line here cannot silently break the others. -->
+        <spigot.classifier/>
+        <specialsource.phase>none</specialsource.phase>
+
         <!-- Spigot Version Mappings -->
-        <spigot.versions>v1_19_R1,v1_19_R2,v1_19_R3,v1_20_R1,v1_20_R2,v1_20_R3,v1_20_R4,v1_21_R1,v1_21_R2,v1_21_R3,v1_21_R4,v1_21_R5,v1_21_R6</spigot.versions>
+        <spigot.versions>v1_19_R1,v1_19_R2,v1_19_R3,v1_20_R1,v1_20_R2,v1_20_R3,v1_20_R4,v1_21_R1,v1_21_R2,v1_21_R3,v1_21_R4,v1_21_R5,v1_21_R6,v1_21_R7,v26_1_R1,v26_2_R1</spigot.versions>
     </properties>
 
     <profiles>
@@ -263,6 +280,56 @@
                                     </arguments>
                                 </configuration>
                             </execution>
+                            <execution>
+                                <id>build-v1_21_R7</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>mvn</executable>
+                                    <arguments>
+                                        <argument>package</argument>
+                                        <argument>-P</argument>
+                                        <argument>v1_21_R7</argument>
+                                        <argument>-q</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+
+                            <!-- 26.x Versions -->
+                            <execution>
+                                <id>build-v26_1_R1</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>mvn</executable>
+                                    <arguments>
+                                        <argument>package</argument>
+                                        <argument>-P</argument>
+                                        <argument>v26_1_R1</argument>
+                                        <argument>-q</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>build-v26_2_R1</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>mvn</executable>
+                                    <arguments>
+                                        <argument>package</argument>
+                                        <argument>-P</argument>
+                                        <argument>v26_2_R1</argument>
+                                        <argument>-q</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
                         </executions>
                     </plugin>
                 </plugins>
@@ -274,12 +341,13 @@
         <profile>
             <id>v1_19_R1</id>
             <properties>
-                <maven.compiler.source>17</maven.compiler.source>
-                <maven.compiler.target>17</maven.compiler.target>
                 <spigot.version>1.19.2-R0.1-SNAPSHOT</spigot.version>
                 <spigot.display.version>1.19.2</spigot.display.version>
                 <nms.version>v1_19_R1</nms.version>
                 <api.version>1.19</api.version>
+                <java.version>17</java.version>
+                <spigot.classifier>remapped-mojang</spigot.classifier>
+                <specialsource.phase>package</specialsource.phase>
             </properties>
             <build>
                 <finalName>${project.artifactId}-${spigot.display.version}-SNAPSHOT</finalName>
@@ -288,12 +356,13 @@
         <profile>
             <id>v1_19_R2</id>
             <properties>
-                <maven.compiler.source>17</maven.compiler.source>
-                <maven.compiler.target>17</maven.compiler.target>
                 <spigot.version>1.19.3-R0.1-SNAPSHOT</spigot.version>
                 <spigot.display.version>1.19.3</spigot.display.version>
                 <nms.version>v1_19_R2</nms.version>
                 <api.version>1.19</api.version>
+                <java.version>17</java.version>
+                <spigot.classifier>remapped-mojang</spigot.classifier>
+                <specialsource.phase>package</specialsource.phase>
             </properties>
             <build>
                 <finalName>${project.artifactId}-${spigot.display.version}-SNAPSHOT</finalName>
@@ -302,12 +371,13 @@
         <profile>
             <id>v1_19_R3</id>
             <properties>
-                <maven.compiler.source>17</maven.compiler.source>
-                <maven.compiler.target>17</maven.compiler.target>
                 <spigot.version>1.19.4-R0.1-SNAPSHOT</spigot.version>
                 <spigot.display.version>1.19.4</spigot.display.version>
                 <nms.version>v1_19_R3</nms.version>
                 <api.version>1.19</api.version>
+                <java.version>17</java.version>
+                <spigot.classifier>remapped-mojang</spigot.classifier>
+                <specialsource.phase>package</specialsource.phase>
             </properties>
             <build>
                 <finalName>${project.artifactId}-${spigot.display.version}-SNAPSHOT</finalName>
@@ -322,6 +392,9 @@
                 <spigot.display.version>1.20.1</spigot.display.version>
                 <nms.version>v1_20_R1</nms.version>
                 <api.version>1.20</api.version>
+                <java.version>21</java.version>
+                <spigot.classifier>remapped-mojang</spigot.classifier>
+                <specialsource.phase>package</specialsource.phase>
             </properties>
             <build>
                 <finalName>${project.artifactId}-${spigot.display.version}-SNAPSHOT</finalName>
@@ -334,6 +407,9 @@
                 <spigot.display.version>1.20.2</spigot.display.version>
                 <nms.version>v1_20_R2</nms.version>
                 <api.version>1.20</api.version>
+                <java.version>21</java.version>
+                <spigot.classifier>remapped-mojang</spigot.classifier>
+                <specialsource.phase>package</specialsource.phase>
             </properties>
             <build>
                 <finalName>${project.artifactId}-${spigot.display.version}-SNAPSHOT</finalName>
@@ -346,6 +422,9 @@
                 <spigot.display.version>1.20.4</spigot.display.version>
                 <nms.version>v1_20_R3</nms.version>
                 <api.version>1.20</api.version>
+                <java.version>21</java.version>
+                <spigot.classifier>remapped-mojang</spigot.classifier>
+                <specialsource.phase>package</specialsource.phase>
             </properties>
             <build>
                 <finalName>${project.artifactId}-${spigot.display.version}-SNAPSHOT</finalName>
@@ -358,6 +437,9 @@
                 <spigot.display.version>1.20.6</spigot.display.version>
                 <nms.version>v1_20_R4</nms.version>
                 <api.version>1.20</api.version>
+                <java.version>21</java.version>
+                <spigot.classifier>remapped-mojang</spigot.classifier>
+                <specialsource.phase>package</specialsource.phase>
             </properties>
             <build>
                 <finalName>${project.artifactId}-${spigot.display.version}-SNAPSHOT</finalName>
@@ -372,6 +454,9 @@
                 <spigot.display.version>1.21.1</spigot.display.version>
                 <nms.version>v1_21_R1</nms.version>
                 <api.version>1.21</api.version>
+                <java.version>21</java.version>
+                <spigot.classifier>remapped-mojang</spigot.classifier>
+                <specialsource.phase>package</specialsource.phase>
             </properties>
             <build>
                 <finalName>${project.artifactId}-${spigot.display.version}-SNAPSHOT</finalName>
@@ -384,6 +469,9 @@
                 <spigot.display.version>1.21.3</spigot.display.version>
                 <nms.version>v1_21_R2</nms.version>
                 <api.version>1.21</api.version>
+                <java.version>21</java.version>
+                <spigot.classifier>remapped-mojang</spigot.classifier>
+                <specialsource.phase>package</specialsource.phase>
             </properties>
             <build>
                 <finalName>${project.artifactId}-${spigot.display.version}-SNAPSHOT</finalName>
@@ -396,6 +484,9 @@
                 <spigot.display.version>1.21.4</spigot.display.version>
                 <nms.version>v1_21_R3</nms.version>
                 <api.version>1.21</api.version>
+                <java.version>21</java.version>
+                <spigot.classifier>remapped-mojang</spigot.classifier>
+                <specialsource.phase>package</specialsource.phase>
             </properties>
             <build>
                 <finalName>${project.artifactId}-${spigot.display.version}-SNAPSHOT</finalName>
@@ -408,6 +499,9 @@
                 <spigot.display.version>1.21.5</spigot.display.version>
                 <nms.version>v1_21_R4</nms.version>
                 <api.version>1.21</api.version>
+                <java.version>21</java.version>
+                <spigot.classifier>remapped-mojang</spigot.classifier>
+                <specialsource.phase>package</specialsource.phase>
             </properties>
             <build>
                 <finalName>${project.artifactId}-${spigot.display.version}-SNAPSHOT</finalName>
@@ -420,6 +514,9 @@
                 <spigot.display.version>1.21.6</spigot.display.version>
                 <nms.version>v1_21_R5</nms.version>
                 <api.version>1.21</api.version>
+                <java.version>21</java.version>
+                <spigot.classifier>remapped-mojang</spigot.classifier>
+                <specialsource.phase>package</specialsource.phase>
             </properties>
             <build>
                 <finalName>${project.artifactId}-${spigot.display.version}-SNAPSHOT</finalName>
@@ -432,6 +529,56 @@
                 <spigot.display.version>1.21.10</spigot.display.version>
                 <nms.version>v1_21_R6</nms.version>
                 <api.version>1.21</api.version>
+                <java.version>21</java.version>
+                <spigot.classifier>remapped-mojang</spigot.classifier>
+                <specialsource.phase>package</specialsource.phase>
+            </properties>
+            <build>
+                <finalName>${project.artifactId}-${spigot.display.version}-SNAPSHOT</finalName>
+            </build>
+        </profile>
+        <profile>
+            <id>v1_21_R7</id>
+            <properties>
+                <spigot.version>1.21.11-R0.2-SNAPSHOT</spigot.version>
+                <spigot.display.version>1.21.11</spigot.display.version>
+                <nms.version>v1_21_R7</nms.version>
+                <api.version>1.21</api.version>
+                <java.version>21</java.version>
+                <spigot.classifier>remapped-mojang</spigot.classifier>
+                <specialsource.phase>package</specialsource.phase>
+            </properties>
+            <build>
+                <finalName>${project.artifactId}-${spigot.display.version}-SNAPSHOT</finalName>
+            </build>
+        </profile>
+        <!-- From 26.1 on Spigot ships Mojang-mapped and drops the versioned
+             craftbukkit package, so no classifier and no remapping. -->
+        <profile>
+            <id>v26_1_R1</id>
+            <properties>
+                <spigot.version>26.1.2-R0.1-SNAPSHOT</spigot.version>
+                <spigot.display.version>26.1.2</spigot.display.version>
+                <nms.version>v26_1_R1</nms.version>
+                <api.version>1.21</api.version>
+                <java.version>25</java.version>
+                <spigot.classifier/>
+                <specialsource.phase>none</specialsource.phase>
+            </properties>
+            <build>
+                <finalName>${project.artifactId}-${spigot.display.version}-SNAPSHOT</finalName>
+            </build>
+        </profile>
+        <profile>
+            <id>v26_2_R1</id>
+            <properties>
+                <spigot.version>26.2-R0.1-SNAPSHOT</spigot.version>
+                <spigot.display.version>26.2</spigot.display.version>
+                <nms.version>v26_2_R1</nms.version>
+                <api.version>1.21</api.version>
+                <java.version>25</java.version>
+                <spigot.classifier/>
+                <specialsource.phase>none</specialsource.phase>
             </properties>
             <build>
                 <finalName>${project.artifactId}-${spigot.display.version}-SNAPSHOT</finalName>
@@ -447,6 +594,35 @@
             </resource>
         </resources>
         <plugins>
+            <!-- Wipe only the compiled classes before each build.
+                 Every profile writes into the same target/ directory, so without this a
+                 build would inherit the previous profile's NMS classes and package them
+                 into its jar - e.g. Java 25 v26_x classes ending up in a 1.19 jar. The
+                 sibling jars in target/ must survive, which is why the sub-builds cannot
+                 simply run "clean package": the first clean would delete them all. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>${maven-clean-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>clean-classes</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <configuration>
+                            <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                            <filesets>
+                                <fileset>
+                                    <directory>${project.build.outputDirectory}</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- Add NMS Version-Specific Sources -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -489,7 +665,7 @@
                     <!-- Step 1: Remap from Mojang to Obfuscated -->
                     <execution>
                         <id>remap-obf</id>
-                        <phase>package</phase>
+                        <phase>${specialsource.phase}</phase>
                         <goals>
                             <goal>remap</goal>
                         </goals>
@@ -505,7 +681,7 @@
                     <!-- Step 2: Remap from Obfuscated to Spigot -->
                     <execution>
                         <id>remap-spigot</id>
-                        <phase>package</phase>
+                        <phase>${specialsource.phase}</phase>
                         <goals>
                             <goal>remap</goal>
                         </goals>
@@ -543,7 +719,7 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
             <version>${spigot.version}</version>
-            <classifier>remapped-mojang</classifier>
+            <classifier>${spigot.classifier}</classifier>
             <scope>provided</scope>
         </dependency>
 
